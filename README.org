@@ -1,0 +1,3 @@
+#+html: <p align="center">
+#+html: <img src="./3pnt14.gif" alt="3Poin14" width="600" align="center">
+#+html: </p>
