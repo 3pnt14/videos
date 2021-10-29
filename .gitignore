@@ -4,3 +4,4 @@ __pycache__
 videos/
 testing
 *.svg
+/intro/media/
