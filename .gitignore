@@ -5,3 +5,4 @@ videos/
 testing
 *.svg
 /intro/media/
+*/media/*
