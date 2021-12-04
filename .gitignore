@@ -1,8 +1,10 @@
+*
+!*.py
+!*.cfg
 __pycache__
 *.mp4
 *.mkv
 videos/
 testing
 *.svg
-/intro/media/
 */media/*
