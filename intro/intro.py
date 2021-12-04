@@ -5,6 +5,7 @@ from manim import *
 class Intro(Scene):
 
     def construct(self):
+        self.camera.background_color = "#0d1117"
         circle = Circle(radius=2).set_color(WHITE)
         pi = MathTex(r'\pi', font_size=140).scale(2)
         sub_text = Text("3Point14", font_size=90)
