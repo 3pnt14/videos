@@ -1,6 +1,3 @@
-*
-!*.py
-!*.cfg
 __pycache__
 *.mp4
 *.mkv
