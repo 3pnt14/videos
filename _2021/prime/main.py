@@ -26,7 +26,7 @@ class WriteIfOdd(VGroup):
         # self.play(Write(eq_odd), FadeOut(_7), FadeIn(_7_red))
 
 
-class prime(Scene):
+class Collatz(Scene):
     _dim = "#1d2021"
     _bg = "#02042a"
     _red = "#cc241d"
@@ -43,7 +43,7 @@ class prime(Scene):
 
         eq_odd = MathTex(r"\times 3 + 1", font_size=70)
         eq = MathTex(r" + 1", font_size=70)
-        eq_even = Text(r"÷ 2", font_size=70)
+        eq_even = Text(r"÷ 2", font_size=50)
 
         numbers = VGroup(*[NumberCircle(num) for num in range(1, 10)])
         self.play(numbers.animate.arrange(RIGHT, buff=0.3), run_time=2)
