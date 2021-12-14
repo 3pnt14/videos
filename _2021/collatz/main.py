@@ -45,22 +45,28 @@ class Collatz(Scene):
         eq = MathTex(r" + 1", font_size=70)
         eq_even = Text(r"÷ 2", font_size=50)
 
-        numbers = VGroup(*[NumberCircle(num) for num in range(1, 10)])
-        self.play(numbers.animate.arrange(RIGHT, buff=0.3), run_time=2)
+        numbers = VGroup(*[NumberCircle(num) for num in range(1, 10)]).shift(LEFT*3)
+        self.play(numbers.animate.arrange(RIGHT, center=False,
+                                          buff=0.3), rate_func=smooth, run_time=2)
         self.wait()
         # copy numbers 7 and then delete it from numbers list
-        _7 = numbers[6].copy()
-        numbers.remove(numbers[6])
+        # _7 = numbers[6].copy()
+        # numbers.remove(numbers[6])
+
+        def choose_number(number):
+            _number = numbers[number-1].copy()
+            numbers.remove(numbers[number-1])
+            self.play(AnimationGroup(
+                _number.animate.set_stroke(color=WHITE, width=self.circle_width),
+                FadeOut(numbers, shift=UP),
+                rate_func=rush_from,
+                run_time=2
+            ))
+            return _number
+        _7 = choose_number(7)
         #
-        self.play(AnimationGroup(
-            _7.animate.set_stroke(color=WHITE, width=self.circle_width),
-            FadeOut(numbers, shift=UP),
-            rate_func=rush_from,
-            run_time=2
-        ))
         self.wait()
         self.play(_7.animate.scale(2).move_to(ORIGIN), run_time=2)
-        # self.add(eq_odd.next_to(_7, RIGHT))
 
         def is_even(number):
             return number % 2 == 0
@@ -71,7 +77,7 @@ class Collatz(Scene):
                     2).set_stroke(color=BLUE, width=self.circle_width).move_to(old, ORIGIN)
                 eq_even.next_to(new, RIGHT)
                 self.play(FadeIn(new), FadeOut(old), Write(eq_even))
-                return int((number / 2))
+                return new, int((number / 2))
             else:
                 new = NumberCircle(number, RED).scale(2).set_stroke(
                     color=RED, width=self.circle_width).move_to(old, ORIGIN)
@@ -79,10 +85,22 @@ class Collatz(Scene):
                 self.play(FadeIn(new), FadeOut(old), Write(eq_odd))
                 return new, int((number * 3 + 1))
 
+        def write_arrow_up(start, end):
+            arrow = Arrow(start=start.get_corner(UR),
+                          end=end.get_corner(DL),
+                          buff=3.1,
+                          stroke_width=5)
+            return arrow
+
+        def write_arrow_down(start, end):
+            arrow = Arrow(start=start.get_corner(DR), end=end.get_corner(UL), buff=3.1)
+            return arrow
+
         new, res = change_color(7, _7)
         self.wait()
         test = NumberCircle(res).scale(2).shift(UP*3+RIGHT*2)
-        arrow = Arrow(start=new.get_corner(UR), end=test.get_corner(DL), buff=0)
+        arrow = write_arrow_up(new, test)
         self.play(Write(test), GrowArrow(arrow))
+
         change_color(res, test)
         self.wait(3)

@@ -1,0 +1,27 @@
+from manim import *
+
+
+class NumberCircle(VGroup):
+    def __init__(self, number):
+        VGroup.__init__(self)
+        dot = LabeledDot(Tex(number, color=WHITE), radius=1)
+        dot = LabeledDot(Text(number, color=WHITE, font_size=20), radius=0.3, color=self._dim)
+
+
+class prime(Scene):
+    _dim = "#1d2021"
+    _bg = "#02042a"
+
+    def construct(self):
+        # def is_even(number):
+        #     return number % 2 == 0
+        # _code = Text("lambda x: x % 2 == 0", font="Sudo", font_size=30).to_edge(UP)
+        # self.camera.background_color = self._bg
+        # numbers = VGroup(*[DecimalNumber(num, num_decimal_places=0) for num in range(1, 11)])
+        # self.play(Write(numbers.arrange_in_grid(rows=2, buff=(0.8, 0.2))), run_time=1)
+        # self.play(Write(_code))
+        # # for num in numbers:
+        # #     if is_even(num):
+        # #         self.play(Write())
+
+        self.play(Write(dot))
