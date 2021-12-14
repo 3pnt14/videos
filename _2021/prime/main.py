@@ -13,7 +13,7 @@ class ArrowDot(VGroup):
     def __init__(self, first, last):
         VGroup.__init__(self)
         arrow = Arrow(start=first.get_corner(UR), end=last.get_corner(DL), buff=0)
-        self.add(arrow)
+        self.play(GrowArrow(arrow))
 
 
 class WriteIfOdd(VGroup):
