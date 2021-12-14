@@ -35,9 +35,15 @@ class prime(Scene):
     def construct(self):
         # _code = Text("lambda x: x % 2 == 0", font="Sudo", font_size=30).to_edge(UP)
         self.camera.background_color = self._bg
-        eq_odd = MathTex(r"\times {{3}} + 1", font_size=70)
+
+        def change_color(self, circle, color):
+            circle_copy = NumberCircle(circle, color).scale(2).move_to(
+                circle, ORIGIN).set_stroke(color=color, width=self.circle_width)
+            self.play(FadeIn(circle_copy, circle))
+
+        eq_odd = MathTex(r"\times 3 + 1", font_size=70)
         eq = MathTex(r" + 1", font_size=70)
-        eq_even = MathTex(r"\div {{2}}", font_size=70)
+        eq_even = Text(r"÷ 2", font_size=70)
 
         numbers = VGroup(*[NumberCircle(num) for num in range(1, 10)])
         self.play(numbers.animate.arrange(RIGHT, buff=0.3), run_time=2)
@@ -46,41 +52,37 @@ class prime(Scene):
         _7 = numbers[6].copy()
         numbers.remove(numbers[6])
         #
-
-        # self.play(_7.animate.shift(DOWN))
-        # self.play(_7.animate.set_stroke(color=WHITE, width=self.circle_width))
-        choosen_animations = [
-            FadeIn(_7, stroke_color(WHITE, width=self.circle_width))
-        ]
-        self.play(AnimationGroup(*choosen_animations))
-        # self.play(AnimationGroup(
-        #     _7.shift(DOWN),
-        #     _7.set_stroke(color=WHITE, width=self.circle_width)
-        # ))
+        self.play(AnimationGroup(
+            _7.animate.set_stroke(color=WHITE, width=self.circle_width),
+            FadeOut(numbers, shift=UP),
+            rate_func=rush_from,
+            run_time=2
+        ))
         self.wait()
-        self.play(_7.animate.scale(2).move_to(ORIGIN),
-                  FadeOut(numbers, shift=UP),
-                  run_time=2)
-        # _7_red = NumberCircle(7, self._red).scale(2).move_to(
-        #     _7, ORIGIN).set_stroke(color=self._red, width=self.circle_width)
+        self.play(_7.animate.scale(2).move_to(ORIGIN), run_time=2)
         # self.add(eq_odd.next_to(_7, RIGHT))
-        # self.play(Write(eq_odd), FadeOut(_7), FadeIn(_7_red))
-        # self.wait()
-        # _21 = NumberCircle(21).scale(2)
-        # arrow = always_redraw(lambda: Arrow(
-        #     start=_7_red.get_corner(UR), end=_21.get_corner(DL), buff=0))
-        # arrow = ArrowDot(_7_red, _21)
-        # self.play(_7_red.animate.shift(LEFT*2, DOWN*3),
-        #           Write(_21),
-        #           Write(arrow),
-        #           _21.animate.shift(UR),
-        #           FadeOut(eq_odd),
-        #           run_time=2)
-        # _7.move_to(_7_red, ORIGIN)
-        # self.play(FadeOut(_7_red), FadeIn(_7),
-        #           run_time=0.5)
-        # self.wait()
-        # self.add(eq.next_to(_21, RIGHT))
-        # self.play(Write(eq))
-        # self.play(_21.animate.shift(UP))
-        # self.wait()
+
+        def is_even(number):
+            return number % 2 == 0
+
+        def change_color(number, old, change=False):
+            if is_even(number):
+                new = NumberCircle(number, BLUE).scale(
+                    2).set_stroke(color=BLUE, width=self.circle_width).move_to(old, ORIGIN)
+                eq_even.next_to(new, RIGHT)
+                self.play(FadeIn(new), FadeOut(old), Write(eq_even))
+                return int((number / 2))
+            else:
+                new = NumberCircle(number, RED).scale(2).set_stroke(
+                    color=RED, width=self.circle_width).move_to(old, ORIGIN)
+                eq_odd.next_to(new, RIGHT)
+                self.play(FadeIn(new), FadeOut(old), Write(eq_odd))
+                return new, int((number * 3 + 1))
+
+        new, res = change_color(7, _7)
+        self.wait()
+        test = NumberCircle(res).scale(2).shift(UP*3+RIGHT*2)
+        arrow = Arrow(start=new.get_corner(UR), end=test.get_corner(DL), buff=0)
+        self.play(Write(test), GrowArrow(arrow))
+        change_color(res, test)
+        self.wait(3)
