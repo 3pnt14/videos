@@ -119,14 +119,42 @@ class PlanetOrbits(Scene):
 
         sun = ImageMobject(icons["Sun"]).scale(0.2)
         self.add(sun, stars)
-        venus = add_planet("Venus")
-        earth = add_planet("Earth")
+        # initialize the list of shapes
+        list_of_shapes = VGroup()
+        for plnt in ["Mercury", "Venus", "Mars", "Neptune" "Saturn", "Jupiter"]:
+            # if the planet was further than earth, it will take position = 3 & Earth position = 2
+            # otherwise, it will take position = 2 & Earth position = 3
+            # change the dictionary to list for better indexing
+            temp_planets = planets
+            if list(temp_planets.keys()).index(plnt) < list(temp_planets.keys()).index("Earth"):
+                planets[plnt][2] = 2
+                planets["Earth"][2] = 3
+            else:
+                planets[plnt][2] = 3
+                planets["Earth"][2] = 2
+            # retrive time 
+            time_to_generate_shape = times[plnt][1]
+            other = add_planet(plnt)
+            earth = add_planet("Earth")
+            self.wait()
+            rotate_planet(other, 2)
+            rotate_planet(earth, 2)
+            trace = dot_between(earth, other)
+            self.wait(time_to_generate_shape)
+            self.remove(trace[1])
+            trace[0].clear_updaters()
+            # self.play(trace[0].animate.scale(0.3).to_edge(planets[plnt][4], buff=1))
+            self.play(FadeOut(trace[0]))
+            # Prepare
+            trace[0].scale(0.3)
+            caption = Text("%s - %s"%("Earth", plnt), font_size=20, font="Bai Jamjuree SemiBold").next_to(trace[0], DOWN, buff=MED_SMALL_BUFF)
+            shape = VGroup(trace[0], caption)
+            list_of_shapes.add(shape)
+            [remove_planet(i) for i in [earth, other]]
+            self.wait(2)
+        self.play(FadeOut(sun))
         self.wait()
-        rotate_planet(venus, 1)
-        rotate_planet(earth, 1)
-        venus_earth = dot_between(earth, venus)
+        list_of_shapes.arrange_in_grid(rows=2, buff=0.3).to_edge(UP, buff=MED_SMALL_BUFF)
+        self.play(AnimationGroup(FadeIn(list_of_shapes, lag_ratio=0.3)))
 
-        self.wait(37)
-        remove_planet(earth)
-        remove_planet(venus)
         self.wait(2)
