@@ -44,7 +44,8 @@ class PlanetOrbits(Scene):
 
         # }}}
         # dot between {{{1
-        def dot_between(planet1, planet2):
+        def dot_between(obj1, obj2):
+            planet1, planet2 = obj1[1], obj2[1]
             line = Line(start=planet1.get_center(),
                         end=planet2.get_center(),
                         stroke_opacity=0)
@@ -55,9 +56,10 @@ class PlanetOrbits(Scene):
             dot = Dot(radius=0.04, color=WHITE).add_updater(
                 lambda x: x.move_to(line.get_midpoint()))
 
+            self.add(line, dot)
             trace = TracedPath(dot.get_center)
-            self.add(line, trace, dot)
-            return dot
+            self.add(trace)
+            return [trace, dot]
             # }}}
 
         # add planet {{{1
@@ -74,11 +76,11 @@ class PlanetOrbits(Scene):
                                  num_dashes=100,
                                  )
 
-            self.add(obj, planet_path, circle)
-            return circle
+            self.play(AnimationGroup(FadeIn(
+                planet_path, circle
+                )), FadeIn(obj))
+            return [planet, circle, planet_path]
             # }}}
-        def rotate_planet(planet, name, speed):
-            planet.add_updater(lambda x, dt: x.rotate(2 * dt * speed * round(
         # rotate planet {{{1
         def rotate_planet(planet, speed):
             name, obj = planet[0], planet[1]
@@ -93,5 +95,9 @@ class PlanetOrbits(Scene):
         self.wait()
         rotate_planet(venus, 1)
         rotate_planet(earth, 1)
+        venus_earth = dot_between(earth, venus)
 
-        self.wait(3)
+        self.wait(37)
+        # remove_planet(earth)
+        # remove_planet(venus)
+        self.wait(2)
