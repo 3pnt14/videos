@@ -29,12 +29,12 @@ class PlanetOrbits(Scene):
         # "Uranus":     30687
         # "Neptune":    60190
         planets = {
-                # name      0:days, 1:speed ratio(365/days), 2:size, 
+                # name      0:days, 1:speed ratio(365/days), 2: position, 3:size, 
             "Mercury": [88, 4.15, 1, 0.08],
             "Venus": [225, 1.625, 1, 0.16],
             "Earth": [365, 1, 1, 0.3],
             "Mars": [687, 0.55, 1, 0.11],
-            "Jupiter": [4333, 0.085, 1, 0.06],
+            "Jupiter": [4333, 0.086, 1, 0.16],
             "Saturn": [10759, 0.035, 1, 0.15],
             "Uranus": [30687, 0.015, 1, 0.2],
             "Neptune": [60190, 0.006, 1, 0.1]
@@ -45,7 +45,7 @@ class PlanetOrbits(Scene):
             "Venus": [1, 30],
             "Earth": [1],
             "Mars": [6, 80],
-            "Jupiter": [4333, 90],
+            "Jupiter": [4333, 100],
             "Saturn": [10759, 100],
             "Uranus": [30687, 80],
             "Neptune": [10, 40]
@@ -101,7 +101,7 @@ class PlanetOrbits(Scene):
             circle = Circle(radius=planets[planet][3], stroke_opacity=0).move_to(
                 UP * planets[planet][2]).scale(planets[planet][3])
 
-            obj = ImageMobject(icons[planet]).scale(planets[planet][2]).add_updater(lambda x: x.move_to(circle.get_center()))
+            obj = ImageMobject(icons[planet]).scale(planets[planet][3]).add_updater(lambda x: x.move_to(circle.get_center()))
 
             planet_path = DashedVMobject(Circle(radius=planets[planet][2],
                                  stroke_color=GRAY,
@@ -174,7 +174,11 @@ class PlanetOrbits(Scene):
             self.wait(2)
         self.play(FadeOut(sun))
         self.wait()
-        list_of_shapes.arrange_in_grid(rows=2, buff=0.3).to_edge(UP, buff=MED_SMALL_BUFF)
-        self.play(AnimationGroup(FadeIn(list_of_shapes, lag_ratio=0.15)))
+        if len(list_of_shapes) <= 3:
+            list_of_shapes.arrange_in_grid(rows=1, buff=1).move_to(ORIGIN)
+            self.play(AnimationGroup(DrawBorderThenFill(list_of_shapes, lag_ratio=0.5, run_time=3)))
+        else:
+            list_of_shapes.arrange_in_grid(rows=2, buff=0.5).to_edge(UP, buff=0.5)
+            self.play(AnimationGroup(DrawBorderThenFill(list_of_shapes, lag_ratio=0.5, run_time=3)))
 
         self.wait(2)
