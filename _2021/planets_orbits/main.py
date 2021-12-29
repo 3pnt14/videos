@@ -101,7 +101,7 @@ class PlanetOrbits(Scene):
             circle = Circle(radius=planets[planet][3], stroke_opacity=0).move_to(
                 UP * planets[planet][2]).scale(planets[planet][3])
 
-            obj = ImageMobject(icons[planet]).scale(planets[planet][3]).add_updater(lambda x: x.move_to(circle.get_center()))
+            obj = ImageMobject(icons[planet]).scale(planets[planet][2]).add_updater(lambda x: x.move_to(circle.get_center()))
 
             planet_path = DashedVMobject(Circle(radius=planets[planet][2],
                                  stroke_color=GRAY,
@@ -140,7 +140,8 @@ class PlanetOrbits(Scene):
         self.add(sun, stars)
         # initialize the list of shapes
         list_of_shapes = VGroup()
-        for plnt in ["Mercury", "Venus", "Mars", "Neptune" "Saturn", "Jupiter"]:
+        # for plnt in ["Venus"]:
+        for plnt in ["Mercury", "Venus", "Mars", "Neptune", "Saturn", "Jupiter"]:
             # if the planet was further than earth, it will take position = 3 & Earth position = 2
             # otherwise, it will take position = 2 & Earth position = 3
             # change the dictionary to list for better indexing
@@ -156,8 +157,8 @@ class PlanetOrbits(Scene):
             other = add_planet(plnt)
             earth = add_planet("Earth")
             self.wait()
-            rotate_planet(other, 2)
-            rotate_planet(earth, 2)
+            rotate_planet(other, 1)
+            rotate_planet(earth, 1)
             trace = dot_between(earth, other)
             self.wait(time_to_generate_shape)
             self.remove(trace[1])
@@ -174,6 +175,6 @@ class PlanetOrbits(Scene):
         self.play(FadeOut(sun))
         self.wait()
         list_of_shapes.arrange_in_grid(rows=2, buff=0.3).to_edge(UP, buff=MED_SMALL_BUFF)
-        self.play(AnimationGroup(FadeIn(list_of_shapes, lag_ratio=0.3)))
+        self.play(AnimationGroup(FadeIn(list_of_shapes, lag_ratio=0.15)))
 
         self.wait(2)
