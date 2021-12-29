@@ -65,9 +65,6 @@ class PlanetOrbits(Scene):
             circle = Circle(radius=planets[planet][3], stroke_opacity=0).move_to(
                 UP * planets[planet][2]).scale(planets[planet][3])
 
-            # obj = ImageMobject(icons[planet]).shift(
-                # UP * planets[planet][2]).scale(planets[planet][3]).add_updater(
-                    # lambda x: x.move_to(circle.get_center()))
             obj = ImageMobject(icons[planet]).scale(planets[planet][3]).add_updater(lambda x: x.move_to(circle.get_center()))
 
             planet_path = DashedVMobject(Circle(radius=planets[planet][2],
