@@ -19,17 +19,36 @@ class PlanetOrbits(Scene):
         # Info {{{1
         # 
         # Data from: https://spaceplace.nasa.gov/
-        #
+        # ---------------------------------------
+        # "Mercury":    88
+        # "Venus":      225
+        # "Earth":      365
+        # "Mars":       687
+        # "Jupiter":    4333
+        # "Saturn":     10759
+        # "Uranus":     30687
+        # "Neptune":    60190
         planets = {
-            # name      days, speed ratio, distance, size
+                # name      0:days, 1:speed ratio, 2:distance, 3:size, 4:place planet according to Earth, 5:time to generate the shape
             "Mercury": [88, 365 / 88, 0.3, 0.08],
-            "Venus": [225, 1.625, 2, 0.16],
-            "Earth": [365, 365 / 365, 3, 0.3],
-            "Mars": [687, 365 / 687, 1.5, 0.11],
+            "Venus": [225, 1.625, 2, 0.16,30],
+            "Earth": [365, 365 / 365, 2, 0.3],
+            "Mars": [687, 0.55, 3, 0.11, 80],
+            "Jupiter": [4333, 0.085, 2, 0.06],
+            "Saturn": [10759, 0.035, 2.4, 0.15],
+            "Uranus": [30687, 0.015, 3, 0.2],
+            "Neptune": [60190, 0.006, 3.7, 0.1, 80]
+        }
+        times = {
+                # name      0:days, 1:speed ratio, 2:distance, 3:size, 4:place planet according to Earth, 5:time to generate the shape
+            "Mercury": [1, 30],
+            "Venus": [1, 30],
+            "Earth": [1],
+            "Mars": [6, 80],
             "Jupiter": [4333, 365 / 4333, 2, 0.06],
             "Saturn": [10759, 365 / 10759, 2.4, 0.15],
             "Uranus": [30687, 365 / 30687, 3, 0.2],
-            "Neptune": [60190, 365 / 60190, 3.7, 0.1]
+            "Neptune": [10, 40]
         }
             # }}}
         # Icons {{{1
