@@ -29,25 +29,25 @@ class PlanetOrbits(Scene):
         # "Uranus":     30687
         # "Neptune":    60190
         planets = {
-                # name      0:days, 1:speed ratio, 2:distance, 3:size, 4:place planet according to Earth, 5:time to generate the shape
-            "Mercury": [88, 365 / 88, 0.3, 0.08],
-            "Venus": [225, 1.625, 2, 0.16,30],
-            "Earth": [365, 365 / 365, 2, 0.3],
-            "Mars": [687, 0.55, 3, 0.11, 80],
-            "Jupiter": [4333, 0.085, 2, 0.06],
-            "Saturn": [10759, 0.035, 2.4, 0.15],
-            "Uranus": [30687, 0.015, 3, 0.2],
-            "Neptune": [60190, 0.006, 3.7, 0.1, 80]
+                # name      0:days, 1:speed ratio(365/days), 2:size, 
+            "Mercury": [88, 4.15, 1, 0.08],
+            "Venus": [225, 1.625, 1, 0.16],
+            "Earth": [365, 1, 1, 0.3],
+            "Mars": [687, 0.55, 1, 0.11],
+            "Jupiter": [4333, 0.085, 1, 0.06],
+            "Saturn": [10759, 0.035, 1, 0.15],
+            "Uranus": [30687, 0.015, 1, 0.2],
+            "Neptune": [60190, 0.006, 1, 0.1]
         }
         times = {
-                # name      0:days, 1:speed ratio, 2:distance, 3:size, 4:place planet according to Earth, 5:time to generate the shape
+                # name      0:playing speed, 1:time to generate the shape
             "Mercury": [1, 30],
             "Venus": [1, 30],
             "Earth": [1],
             "Mars": [6, 80],
-            "Jupiter": [4333, 365 / 4333, 2, 0.06],
-            "Saturn": [10759, 365 / 10759, 2.4, 0.15],
-            "Uranus": [30687, 365 / 30687, 3, 0.2],
+            "Jupiter": [4333, 90],
+            "Saturn": [10759, 100],
+            "Uranus": [30687, 80],
             "Neptune": [10, 40]
         }
             # }}}
