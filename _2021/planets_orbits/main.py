@@ -79,14 +79,19 @@ class PlanetOrbits(Scene):
             # }}}
         def rotate_planet(planet, name, speed):
             planet.add_updater(lambda x, dt: x.rotate(2 * dt * speed * round(
+        # rotate planet {{{1
+        def rotate_planet(planet, speed):
+            name, obj = planet[0], planet[1]
+            obj.add_updater(lambda x, dt: x.rotate(2 * dt * speed * round(
                 planets[name][1], 3), about_point=ORIGIN))
+            # }}}
 
         sun = ImageMobject(icons["Sun"]).scale(0.2)
         self.add(sun, stars)
         venus = add_planet("Venus")
         earth = add_planet("Earth")
-        rotate_planet(venus, "Venus", 1)
-        rotate_planet(earth, "Earth", 1)
-        dot_between(earth, venus)
+        self.wait()
+        rotate_planet(venus, 1)
+        rotate_planet(earth, 1)
 
         self.wait(3)
