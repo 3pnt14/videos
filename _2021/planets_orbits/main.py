@@ -17,6 +17,9 @@ class PlanetOrbits(Scene):
             for i in range(20)
         ])
         # Info {{{1
+        # 
+        # Data from: https://spaceplace.nasa.gov/
+        #
         planets = {
             # name      days, speed ratio, distance, size
             "Mercury": [88, 365 / 88, 0.3, 0.08],
@@ -45,25 +48,37 @@ class PlanetOrbits(Scene):
         # }}}
         # dot between {{{1
         def dot_between(obj1, obj2):
+            # planet is a list of:
+            # 0: planet name, 1: circle surround the planet, 2: planet path, and the 3: obj(icon of the planet)
+            # assing the two circle to planet1, planet2
             planet1, planet2 = obj1[1], obj2[1]
+            # Draw a hidden line between the two circles
             line = Line(start=planet1.get_center(),
                         end=planet2.get_center(),
                         stroke_opacity=0)
 
+            # Make the line track the two circles
             line.add_updater(lambda x: x.put_start_and_end_on(
                 planet1.get_center(), planet2.get_center()))
 
+            # Put a dot and the midpoint of the line
             dot = Dot(radius=0.04, color=WHITE).add_updater(
                 lambda x: x.move_to(line.get_midpoint()))
-
+            # Adding line and dot to the scene
             self.add(line, dot)
+            # Tracing the center of the dot 
             trace = TracedPath(dot.get_center)
+            # Adding the trace to the scene
             self.add(trace)
             return [trace, dot]
             # }}}
 
         # add planet {{{1
         def add_planet(planet):
+            # tracking an image is tricky, it changes in size during moving, and that effect the position of tracking point
+            # which affect the trace that it draw
+            # Solution: I used a circle instead that surround the obj(icon), and I track the circle instead.
+            # obj(icon of the planet) follow the circle using updaters
             circle = Circle(radius=planets[planet][3], stroke_opacity=0).move_to(
                 UP * planets[planet][2]).scale(planets[planet][3])
 
@@ -79,19 +94,24 @@ class PlanetOrbits(Scene):
             self.play(AnimationGroup(FadeIn(
                 planet_path, circle
                 )), FadeIn(obj))
-            return [planet, circle, planet_path]
+            return [planet, circle, planet_path, obj]
             # }}}
             # remove planet {{{1
         def remove_planet(planet):
-            obj, circle, planet_path = planet[0], planet[1], planet[2]
+            # planet is a list of:
+            # 0: planet name, 1: circle surround the planet, 2: planet path, and the 3: obj(icon of the planet)
+            obj, circle, planet_path = planet[3], planet[1], planet[2]
             self.play(AnimationGroup(FadeOut(
                 planet_path, circle
-                ))
+                )),
+                FadeOut(obj)
                 )
-            self.remove(obj)
                 # }}}
         # rotate planet {{{1
         def rotate_planet(planet, speed):
+            # planet is a list of:
+            # 0: Planet name, 1: Circle that surround the icon
+            # Whole list [planet name, circle, planet path, obj(icon)]
             name, obj = planet[0], planet[1]
             obj.add_updater(lambda x, dt: x.rotate(2 * dt * speed * round(
                 planets[name][1], 3), about_point=ORIGIN))
@@ -107,6 +127,6 @@ class PlanetOrbits(Scene):
         venus_earth = dot_between(earth, venus)
 
         self.wait(37)
-        # remove_planet(earth)
-        # remove_planet(venus)
+        remove_planet(earth)
+        remove_planet(venus)
         self.wait(2)
