@@ -81,6 +81,15 @@ class PlanetOrbits(Scene):
                 )), FadeIn(obj))
             return [planet, circle, planet_path]
             # }}}
+            # remove planet {{{1
+        def remove_planet(planet):
+            obj, circle, planet_path = planet[0], planet[1], planet[2]
+            self.play(AnimationGroup(FadeOut(
+                planet_path, circle
+                ))
+                )
+            self.remove(obj)
+                # }}}
         # rotate planet {{{1
         def rotate_planet(planet, speed):
             name, obj = planet[0], planet[1]
