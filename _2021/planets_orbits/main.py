@@ -33,21 +33,21 @@ class PlanetOrbits(Scene):
             "Mercury": [88, 4.15, 1, 0.08],
             "Venus": [225, 1.625, 1, 0.16],
             "Earth": [365, 1, 1, 0.3],
-            "Mars": [687, 0.55, 1, 0.11],
-            "Jupiter": [4333, 0.086, 1, 0.16],
+            "Mars": [687, 0.53, 1, 0.11],
+            "Jupiter": [4333, 0.067, 1, 0.16],
             "Saturn": [10759, 0.035, 1, 0.15],
             "Uranus": [30687, 0.015, 1, 0.2],
             "Neptune": [60190, 0.006, 1, 0.1]
         }
         times = {
                 # name      0:playing speed, 1:time to generate the shape
-            "Mercury": [1, 30],
+            "Mercury": [1, 60],
             "Venus": [1, 30],
             "Earth": [1],
             "Mars": [6, 80],
-            "Jupiter": [4333, 100],
-            "Saturn": [10759, 100],
-            "Uranus": [30687, 80],
+            "Jupiter": [10, 200],
+            "Saturn": [10, 200],
+            "Uranus": [10, 80],
             "Neptune": [10, 40]
         }
             # }}}
