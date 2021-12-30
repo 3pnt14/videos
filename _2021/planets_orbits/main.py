@@ -33,7 +33,7 @@ class PlanetOrbits(Scene):
             "Mercury": [88, 4.15, 1, 0.08],
             "Venus": [225, 1.625, 1, 0.16],
             "Earth": [365, 1, 1, 0.3],
-            "Mars": [687, 0.53, 1, 0.11],
+            "Mars": [687, 0.55, 1, 0.11],
             "Jupiter": [4333, 0.067, 1, 0.16],
             "Saturn": [10759, 0.035, 1, 0.15],
             "Uranus": [30687, 0.015, 1, 0.2],
@@ -41,14 +41,14 @@ class PlanetOrbits(Scene):
         }
         times = {
                 # name      0:playing speed, 1:time to generate the shape
-            "Mercury": [1, 60],
+            "Mercury": [1, 80],
             "Venus": [1, 30],
             "Earth": [1],
             "Mars": [6, 80],
             "Jupiter": [10, 200],
             "Saturn": [10, 200],
             "Uranus": [10, 80],
-            "Neptune": [10, 40]
+            "Neptune": [10, 50]
         }
             # }}}
         # Icons {{{1
@@ -146,11 +146,13 @@ class PlanetOrbits(Scene):
         self.add(sun, stars)
         # initialize the list of shapes
         list_of_shapes = VGroup()
-        for plnt in ["Mercury"]:
+        for plnt in ["Mercury", "Venus"]:
+
         # for plnt in ["Mercury", "Venus", "Mars", "Neptune", "Saturn", "Jupiter"]:
             # if the planet was further than earth, it will take position = 3 & Earth position = 2
             # otherwise, it will take position = 2 & Earth position = 3
             # change the dictionary to list for better indexing
+            self.next_section("Start of section '%s'" %(plnt))
             temp_planets = planets
             if list(temp_planets.keys()).index(plnt) < list(temp_planets.keys()).index("Earth"):
                 planets[plnt][2] = 2
