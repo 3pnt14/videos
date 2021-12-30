@@ -171,14 +171,13 @@ class PlanetOrbits(Scene):
             shape = VGroup(trace[0], caption)
             list_of_shapes.add(shape)
             [remove_planet(i) for i in [earth, other]]
-            self.wait(2)
-        self.play(FadeOut(sun))
-        self.wait()
-        if len(list_of_shapes) <= 3:
+        self.play(FadeOut(sun), rune_time=0.2)
+        self.wait(0.5)
+        if len(list_of_shapes) <= 4:
             list_of_shapes.arrange_in_grid(rows=1, buff=1).move_to(ORIGIN)
-            self.play(AnimationGroup(DrawBorderThenFill(list_of_shapes, lag_ratio=0.5, run_time=3)))
+            self.play(AnimationGroup(FadeIn(list_of_shapes), lag_ratio=0.3, run_time=3))
         else:
             list_of_shapes.arrange_in_grid(rows=2, buff=0.5).to_edge(UP, buff=0.5)
-            self.play(AnimationGroup(DrawBorderThenFill(list_of_shapes, lag_ratio=0.5, run_time=3)))
+            self.play(AnimationGroup(FadeIn(list_of_shapes, lag_ratio=0.5, run_time=3)))
 
         self.wait(2)
