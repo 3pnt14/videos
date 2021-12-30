@@ -17,16 +17,38 @@ class PlanetOrbits(Scene):
             for i in range(20)
         ])
         # Info {{{1
+        # 
+        # Data from: https://spaceplace.nasa.gov/
+        # ---------------------------------------
+        # "Mercury":    88
+        # "Venus":      225
+        # "Earth":      365
+        # "Mars":       687
+        # "Jupiter":    4333
+        # "Saturn":     10759
+        # "Uranus":     30687
+        # "Neptune":    60190
         planets = {
-            # name      days, speed ratio, distance, size
-            "Mercury": [88, 365 / 88, 0.3, 0.08],
-            "Venus": [225, 1.625, 2, 0.16],
-            "Earth": [365, 365 / 365, 3, 0.3],
-            "Mars": [687, 365 / 687, 1.5, 0.11],
-            "Jupiter": [4333, 365 / 4333, 2, 0.06],
-            "Saturn": [10759, 365 / 10759, 2.4, 0.15],
-            "Uranus": [30687, 365 / 30687, 3, 0.2],
-            "Neptune": [60190, 365 / 60190, 3.7, 0.1]
+                # name      0:days, 1:speed ratio(365/days), 2: position, 3:size, 
+            "Mercury": [88, 4.15, 1, 0.08],
+            "Venus": [225, 1.625, 1, 0.16],
+            "Earth": [365, 1, 1, 0.3],
+            "Mars": [687, 0.53, 1, 0.11],
+            "Jupiter": [4333, 0.067, 1, 0.16],
+            "Saturn": [10759, 0.035, 1, 0.15],
+            "Uranus": [30687, 0.015, 1, 0.2],
+            "Neptune": [60190, 0.006, 1, 0.1]
+        }
+        times = {
+                # name      0:playing speed, 1:time to generate the shape
+            "Mercury": [1, 60],
+            "Venus": [1, 30],
+            "Earth": [1],
+            "Mars": [6, 80],
+            "Jupiter": [10, 200],
+            "Saturn": [10, 200],
+            "Uranus": [10, 80],
+            "Neptune": [10, 40]
         }
             # }}}
         # Icons {{{1
@@ -45,25 +67,37 @@ class PlanetOrbits(Scene):
         # }}}
         # dot between {{{1
         def dot_between(obj1, obj2):
+            # planet is a list of:
+            # 0: planet name, 1: circle surround the planet, 2: planet path, and the 3: obj(icon of the planet)
+            # assing the two circle to planet1, planet2
             planet1, planet2 = obj1[1], obj2[1]
+            # Draw a hidden line between the two circles
             line = Line(start=planet1.get_center(),
                         end=planet2.get_center(),
                         stroke_opacity=0)
 
+            # Make the line track the two circles
             line.add_updater(lambda x: x.put_start_and_end_on(
                 planet1.get_center(), planet2.get_center()))
 
+            # Put a dot and the midpoint of the line
             dot = Dot(radius=0.04, color=WHITE).add_updater(
                 lambda x: x.move_to(line.get_midpoint()))
-
+            # Adding line and dot to the scene
             self.add(line, dot)
-            trace = TracedPath(dot.get_center)
+            # Tracing the center of the dot 
+            trace = TracedPath(dot.get_center, stroke_color=[RED_E, YELLOW_E, GREEN_E, TEAL_E, BLUE_D, PURPLE_E])
+            # Adding the trace to the scene
             self.add(trace)
             return [trace, dot]
             # }}}
 
         # add planet {{{1
         def add_planet(planet):
+            # tracking an image is tricky, it changes in size during moving, and that effect the position of tracking point
+            # which affect the trace that it draw
+            # Solution: I used a circle instead that surround the obj(icon), and I track the circle instead.
+            # obj(icon of the planet) follow the circle using updaters
             circle = Circle(radius=planets[planet][3], stroke_opacity=0).move_to(
                 UP * planets[planet][2]).scale(planets[planet][3])
 
@@ -79,34 +113,77 @@ class PlanetOrbits(Scene):
             self.play(AnimationGroup(FadeIn(
                 planet_path, circle
                 )), FadeIn(obj))
-            return [planet, circle, planet_path]
+            return [planet, circle, planet_path, obj]
             # }}}
             # remove planet {{{1
+        # TODO: A better way for cleaning the scene
+        # def clean_scene(planet1, planet2): for example
         def remove_planet(planet):
-            obj, circle, planet_path = planet[0], planet[1], planet[2]
-            self.play(AnimationGroup(FadeOut(
-                planet_path, circle
-                ))
-                )
-            self.remove(obj)
+            """
+            Function for remove a planet from the scene
+            planet is a list of:
+            0: planet name, 1: circle surround the planet, 2: planet path, and the 3: obj(icon of the planet)
+            """
+            circle, planet_path, obj = planet[1], planet[2], planet[3]
+            self.play(AnimationGroup(
+                FadeOut(planet_path, circle), run_time=0.7),
+                FadeOut(obj), run_time=0.7)
                 # }}}
         # rotate planet {{{1
-        def rotate_planet(planet, speed):
+        def rotate_planet(planet):
+            '''
+            Function for rotating a planet
+            planet is a list of:
+            0: Planet name, 1: Circle that surround the icon
+            Whole list [planet name, circle, planet path, obj(icon)]
+
+            '''
             name, obj = planet[0], planet[1]
-            obj.add_updater(lambda x, dt: x.rotate(2 * dt * speed * round(
-                planets[name][1], 3), about_point=ORIGIN))
+            obj.add_updater(lambda x, dt: x.rotate(2 * dt * planets[name][1], about_point=ORIGIN))
             # }}}
 
         sun = ImageMobject(icons["Sun"]).scale(0.2)
         self.add(sun, stars)
-        venus = add_planet("Venus")
-        earth = add_planet("Earth")
-        self.wait()
-        rotate_planet(venus, 1)
-        rotate_planet(earth, 1)
-        venus_earth = dot_between(earth, venus)
+        # initialize the list of shapes
+        list_of_shapes = VGroup()
+        for plnt in ["Mercury"]:
+        # for plnt in ["Mercury", "Venus", "Mars", "Neptune", "Saturn", "Jupiter"]:
+            # if the planet was further than earth, it will take position = 3 & Earth position = 2
+            # otherwise, it will take position = 2 & Earth position = 3
+            # change the dictionary to list for better indexing
+            temp_planets = planets
+            if list(temp_planets.keys()).index(plnt) < list(temp_planets.keys()).index("Earth"):
+                planets[plnt][2] = 2
+                planets["Earth"][2] = 3
+            else:
+                planets[plnt][2] = 3
+                planets["Earth"][2] = 2
+            # retrieve time 
+            time_to_generate_shape = times[plnt][1]
+            other = add_planet(plnt)
+            earth = add_planet("Earth")
+            self.wait()
+            rotate_planet(other)
+            rotate_planet(earth)
+            trace = dot_between(earth, other)
+            self.wait(time_to_generate_shape)
+            self.remove(trace[1])
+            trace[0].clear_updaters()
+            # self.play(trace[0].animate.scale(0.3).to_edge(planets[plnt][4], buff=1))
+            self.play(FadeOut(trace[0]))
+            # Prepare
+            trace[0].scale(0.3)
+            caption = Text("%s - %s"%("Earth", plnt), font_size=20, font="Bai Jamjuree SemiBold").next_to(trace[0], DOWN, buff=MED_SMALL_BUFF)
+            shape = VGroup(trace[0], caption)
+            list_of_shapes.add(shape)
+            [remove_planet(i) for i in [earth, other]]
+        self.play(FadeOut(sun), rune_time=0.2)
+        self.wait(0.5)
+        if len(list_of_shapes) <= 4:
+            list_of_shapes.arrange_in_grid(rows=1, buff=1).move_to(ORIGIN)
+            self.play(AnimationGroup(FadeIn(list_of_shapes), lag_ratio=0.3, run_time=3))
+        else:
+            list_of_shapes.arrange_in_grid(rows=2, buff=0.5).to_edge(UP, buff=0.5)
+            self.play(AnimationGroup(FadeIn(list_of_shapes, lag_ratio=0.5, run_time=3)))
 
-        self.wait(37)
-        # remove_planet(earth)
-        # remove_planet(venus)
         self.wait(2)
