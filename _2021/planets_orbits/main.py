@@ -86,7 +86,7 @@ class PlanetOrbits(Scene):
             # Adding line and dot to the scene
             self.add(line, dot)
             # Tracing the center of the dot 
-            trace = TracedPath(dot.get_center)
+            trace = TracedPath(dot.get_center, stroke_color=[RED_E, YELLOW_E, GREEN_E, TEAL_E, BLUE_D, PURPLE_E])
             # Adding the trace to the scene
             self.add(trace)
             return [trace, dot]
@@ -158,13 +158,13 @@ class PlanetOrbits(Scene):
             else:
                 planets[plnt][2] = 3
                 planets["Earth"][2] = 2
-            # retrive time 
+            # retrieve time 
             time_to_generate_shape = times[plnt][1]
             other = add_planet(plnt)
             earth = add_planet("Earth")
             self.wait()
-            rotate_planet(other, 1)
-            rotate_planet(earth, 1)
+            rotate_planet(other)
+            rotate_planet(earth)
             trace = dot_between(earth, other)
             self.wait(time_to_generate_shape)
             self.remove(trace[1])
