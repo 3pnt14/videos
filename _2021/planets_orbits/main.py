@@ -116,32 +116,38 @@ class PlanetOrbits(Scene):
             return [planet, circle, planet_path, obj]
             # }}}
             # remove planet {{{1
+        # TODO: A better way for cleaning the scene
+        # def clean_scene(planet1, planet2): for example
         def remove_planet(planet):
-            # planet is a list of:
-            # 0: planet name, 1: circle surround the planet, 2: planet path, and the 3: obj(icon of the planet)
-            obj, circle, planet_path = planet[3], planet[1], planet[2]
-            self.play(AnimationGroup(FadeOut(
-                planet_path, circle
-                )),
-                FadeOut(obj)
-                )
+            """
+            Function for remove a planet from the scene
+            planet is a list of:
+            0: planet name, 1: circle surround the planet, 2: planet path, and the 3: obj(icon of the planet)
+            """
+            circle, planet_path, obj = planet[1], planet[2], planet[3]
+            self.play(AnimationGroup(
+                FadeOut(planet_path, circle), run_time=0.7),
+                FadeOut(obj), run_time=0.7)
                 # }}}
         # rotate planet {{{1
-        def rotate_planet(planet, speed):
-            # planet is a list of:
-            # 0: Planet name, 1: Circle that surround the icon
-            # Whole list [planet name, circle, planet path, obj(icon)]
+        def rotate_planet(planet):
+            '''
+            Function for rotating a planet
+            planet is a list of:
+            0: Planet name, 1: Circle that surround the icon
+            Whole list [planet name, circle, planet path, obj(icon)]
+
+            '''
             name, obj = planet[0], planet[1]
-            obj.add_updater(lambda x, dt: x.rotate(2 * dt * speed * round(
-                planets[name][1], 3), about_point=ORIGIN))
+            obj.add_updater(lambda x, dt: x.rotate(2 * dt * planets[name][1], about_point=ORIGIN))
             # }}}
 
         sun = ImageMobject(icons["Sun"]).scale(0.2)
         self.add(sun, stars)
         # initialize the list of shapes
         list_of_shapes = VGroup()
-        # for plnt in ["Venus"]:
-        for plnt in ["Mercury", "Venus", "Mars", "Neptune", "Saturn", "Jupiter"]:
+        for plnt in ["Mercury"]:
+        # for plnt in ["Mercury", "Venus", "Mars", "Neptune", "Saturn", "Jupiter"]:
             # if the planet was further than earth, it will take position = 3 & Earth position = 2
             # otherwise, it will take position = 2 & Earth position = 3
             # change the dictionary to list for better indexing
