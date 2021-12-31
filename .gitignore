@@ -4,5 +4,6 @@ __pycache__
 videos/
 testing
 *.svg
-*/media/*
 *old/
+/_2021/*/media/*
+/_2022/*/media/*
