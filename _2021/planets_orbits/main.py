@@ -94,9 +94,9 @@ class PlanetOrbits(Scene):
 
         # add planet {{{1
         def add_planet(planet):
-            # tracking an image is tricky, it changes in size during moving, and that effect the position of tracking point
-            # which affect the trace that it draw
-            # Solution: I used a circle instead that surround the obj(icon), and I track the circle instead.
+            # tracking an image is tricky, it changes in size during moving, and that affect the position of the `tracking point`
+            # --> which affect the trace 
+            # Solution: I used a circle that surround the obj(icon), and I track the circle instead.
             # obj(icon of the planet) follow the circle using updaters
             circle = Circle(radius=planets[planet][3], stroke_opacity=0).move_to(
                 UP * planets[planet][2]).scale(planets[planet][3])
@@ -120,8 +120,8 @@ class PlanetOrbits(Scene):
         # def clean_scene(planet1, planet2): for example
         def remove_planet(planet):
             """
-            Function for remove a planet from the scene
-            planet is a list of:
+            Function for removing a planet from the scene
+            PLANET is a list of:
             0: planet name, 1: circle surround the planet, 2: planet path, and the 3: obj(icon of the planet)
             """
             circle, planet_path, obj = planet[1], planet[2], planet[3]
@@ -133,9 +133,9 @@ class PlanetOrbits(Scene):
         def rotate_planet(planet):
             '''
             Function for rotating a planet
-            planet is a list of:
+            PLANET is a list of:
             0: Planet name, 1: Circle that surround the icon
-            Whole list [planet name, circle, planet path, obj(icon)]
+            list = [planet name, circle, planet path, obj(icon)]
 
             '''
             name, obj = planet[0], planet[1]
@@ -146,11 +146,11 @@ class PlanetOrbits(Scene):
         self.add(sun, stars)
         # initialize the list of shapes
         list_of_shapes = VGroup()
-        for plnt in ["Mercury", "Venus"]:
+        for plnt in ["Mercury", "Venus", "Mars"]:
 
         # for plnt in ["Mercury", "Venus", "Mars", "Neptune", "Saturn", "Jupiter"]:
-            # if the planet was further than earth, it will take position = 3 & Earth position = 2
-            # otherwise, it will take position = 2 & Earth position = 3
+            # If the planet was "farther" compared to Earth, it would take position 3 and Earth would take position 2.
+            # Otherwise, planet = position 2, Earth = position 3.
             # change the dictionary to list for better indexing
             self.next_section("Start of section '%s'" %(plnt))
             temp_planets = planets
