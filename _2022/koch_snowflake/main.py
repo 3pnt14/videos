@@ -3,24 +3,33 @@ import random
 
 config.frame_height = 16
 config.frame_width = 9
-config.pixel_height = 320*3
-config.pixel_width = 180*3
+config.pixel_height = 320*6
+config.pixel_width = 180*6
 config.frame_rate = 60
 
 # config.background_color = "#455D3E"
 config.background_color = "#06070E"
 
 class KochSnowflake(Scene):
-    # __dot_radius = 0.06
-    # __dot_color = RED_C
     font_size = 35
     _white = "#f6e099"
     def construct(self):
         hexagon = RegularPolygon(n=6, color=self._white).scale(4)
         self.play(Create(hexagon))
-        Dot.set_default(radius=0.02, color=self._white)
+        Dot.set_default(radius=0.05, color=self._white)
         hex_verticies = hexagon.get_vertices()
         __pattern = VGroup()
+
+        # Tracking dots number
+        dots = DecimalNumber(
+                font_size=self.font_size,
+                show_ellipsis=False,
+                num_decimal_places=0).to_edge(DOWN).shift(LEFT)
+        dots.add_updater(lambda d: d.set_value(len(__pattern)+1000))
+        ptxt = Text("points", font="Bitter", font_size=25).next_to(dots, RIGHT)
+        ptxt.add_updater(lambda x: x.next_to(dots, RIGHT))
+        self.play(FadeIn(dots, shift=UP), FadeIn(ptxt, shift=UP), run_time=2)
+
         inst = Paragraph(
                 "1. Pick a random point in the haxagon",
                 "2. Pick a random edge and form a triangle",
@@ -68,33 +77,38 @@ class KochSnowflake(Scene):
 
         __points = 0
         __start = polygon.get_center_of_mass()
-        print(__start)
 
         self.play(Write(inst[3]))
-        # Tracking dots number
-        dots = DecimalNumber(
-                show_ellipsis=False,
-                num_decimal_places=0).to_edge(DOWN)
-        dots.add_updater(lambda d: d.set_value(len(__pattern)))
-        ptxt = Text("points", font="Bitter", font_size=25).next_to(dots, RIGHT)
-        self.add(dots, ptxt)
-        for i in range(5):
+
+        self.next_section()
+
+        for i in range(2):
             __dot = create_polygon(__start, 0.5)
             __start = __dot[1]
             __points = __points + i
             __pattern.add(__dot[0])
-        for i in range(50):
-            __dot = create_polygon(__start, 0.3)
-            __start = __dot[1]
-            __points = __points + i
-            __pattern.add(__dot[0])
-        for i in range(100):
+        self.next_section()
+        # [x.scale(0.5) for x in __pattern]
+        for i in range(2):
             __dot = create_polygon(__start, 0.1)
             __start = __dot[1]
             __points = __points + i
             __pattern.add(__dot[0])
-        for i in range(1845):
-            __dot = create_polygon(__start, 0.01)
+        self.next_section()
+        # [x.scale(0.5) for x in __pattern]
+        # for i in range(50):
+            # __dot = create_polygon(__start, 0.3)
+            # __start = __dot[1]
+            # __points = __points + i
+            # __pattern.add(__dot[0])
+        # self.next_section()
+        # for i in range(100):
+            # __dot = create_polygon(__start, 0.1)
+            # __start = __dot[1]
+            # __points = __points + i
+            # __pattern.add(__dot[0])
+        # for i in range(1845):
+            # __dot = create_polygon(__start, 0.01)
 
         # __pattern.set_color(WHITE)
         self.wait(2)
