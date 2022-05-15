@@ -103,12 +103,12 @@ class KochSnowflake(Scene):
             __points = __points + i
             __pattern.add(__dot[0])
         self.next_section()
-        for i in range(1500):
+        for i in range(3000):
             __dot = create_polygon(__start, 0.01)
             __start = __dot[1]
             __points = __points + i
             __pattern.add(__dot[0])
         self.next_section()
 
-        [s.scale(0.5) for x in __pattern]
+        [x.scale(0.5) for x in __pattern]
         self.wait(2)
